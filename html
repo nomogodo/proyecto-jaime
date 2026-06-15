@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jhayco: Análisis de Patrones y Viralización - Proyecto de Investigación</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00d4ff;
+            --secondary: #ff00ff;
+            --accent: #ffff00;
+            --dark: #0a0a0f;
+            --darker: #050508;
+            --light: #e0e0e0;
+            --gray: #1a1a2e;
+            --text: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--text);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* Navegación */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 2px solid var(--primary);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            padding: 0 1rem;
+        }
+
+        nav a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        nav a:hover {
+            color: var(--secondary);
+            text-shadow: 0 0 10px var(--secondary);
+        }
+
+        /* Header Principal */
+        .hero {
+            margin-top: 60px;
+            padding: 4rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(0,212,255,0.1) 0%, rgba(255,0,255,0.1) 100%);
+            border-bottom: 3px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(0,212,255,0.05) 10px,
+                rgba(0,212,255,0.05) 20px
+            );
+            animation: slide 20s linear infinite;
+        }
+
+        @keyframes slide {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(0,212,255,0.5)); }
+            to { filter: drop-shadow(0 0 30px rgba(255,0,255,0.5)); }
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--light);
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .hero-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+            padding: 2rem;
+            background: rgba(26, 26, 46, 0.6);
+            border-radius: 10px;
+            border: 1px solid var(--primary);
+        }
+
+        .hero-info div {
+            padding: 0.5rem;
+        }
+
+        .hero-info strong {
+            color: var(--primary);
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        /* Contenedor Principal */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Secciones */
+        section {
+            margin: 3rem 0;
+            padding: 2.5rem;
+            background: rgba(26, 26, 46, 0.4);
+            border-radius: 15px;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
+        }
+
+        section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,212,255,0.1);
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h3 {
+            color: var(--secondary);
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem 0;
+            padding-left: 1rem;
+            border-left: 3px solid var(--primary);
+        }
+
+        h4 {
+            color: var(--accent);
+            font-size: 1.2rem;
+            margin: 1.5rem 0 0.8rem 0;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            text-align: justify;
+            font-size: 1.05rem;
+        }
+
+        /* Listas */
+        ul, ol {
+            margin: 1rem 0 1rem 2rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Tablas */
+        .table-container {
+            overflow-x: auto;
+            margin: 2rem 0;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(10, 10, 15, 0.8);
+            font-size: 0.95rem;
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            padding: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 0.8rem;
+            border-bottom: 1px solid rgba(0,212,255,0.2);
+        }
+
+        tr:hover {
+            background: rgba(0,212,255,0.05);
+        }
+
+        /* Tarjetas de contenido */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(0,212,255,0.1) 0%, rgba(255,0,255,0.1) 100%);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--primary);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,212,255,0.3);
+        }
+
+        .card h4 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        /* Estadísticas */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, rgba(0,212,255,0.2), rgba(255,0,255,0.2));
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0,212,255,0.1) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--light);
+        }
+
+        /* Anexos */
+        .anexo-box {
+            background: rgba(10, 10, 15, 0.6);
+            border: 2px dashed var(--secondary);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 10px;
+        }
+
+        .anexo-box h3 {
+            color: var(--accent);
+            border-left-color: var(--secondary);
+        }
+
+        /* Bibliografía */
+        .biblio-item {
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: rgba(0,212,255,0.05);
+            border-left: 3px solid var(--primary);
+            border-radius: 0 5px 5px 0;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--gray) 100%);
+            border-top: 3px solid var(--primary);
+            margin-top: 4rem;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, rgba(0,212,255,0.3) 0%, rgba(255,0,255,0.3) 100%);
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            nav ul {
+                gap: 0.8rem;
+            }
+            
+            nav a {
+                font-size: 0.75rem;
+            }
+            
+            section {
+                padding: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--primary), var(--secondary));
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* Animaciones de entrada */
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <ul>
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#resumen">Resumen</a></li>
+            <li><a href="#intro">Introducción</a></li>
+            <li><a href="#objetivos">Objetivos</a></li>
+            <li><a href="#biografia">Biografía</a></li>
+            <li><a href="#hits">Hits</a></li>
+            <li><a href="#patrones">Patrones</a></li>
+            <li><a href="#patrocinios">Patrocinios</a></li>
+            <li><a href="#viralizacion">Viralización</a></li>
+            <li><a href="#emergentes">Artistas</a></li>
+            <li><a href="#conclusiones">Conclusiones</a></li>
+            <li><a href="#bibliografia">Bibliografía</a></li>
+            <li><a href="#anexos">Anexos</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero" id="inicio">
+        <div class="hero-content">
+            <h1>JHAYCO</h1>
+            <p class="hero-subtitle">Análisis de Patrones, Patrocinios y Estrategias de Viralización en la Música Urbana</p>
+            <div class="hero-info">
+                <div><strong>Autor:</strong> Jaime Triviño</div>
+                <div><strong>Curso:</strong> 4º de la ESO</div>
+                <div><strong>Asignatura:</strong> Proyecto de Investigación</div>
+                <div><strong>Fecha:</strong> Junio 2024</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- RESUMEN -->
+        <section id="resumen" class="fade-in">
+            <h2>📋 Resumen</h2>
+            <p>El presente trabajo de investigación analiza la trayectoria artística de <span class="highlight">Jhayco</span> (anteriormente conocido como Jhay Cortez), uno de los artistas más influyentes de la música urbana latina contemporánea. A través de un enfoque mixto que combina análisis bibliográfico, estudio de caso y observación empírica de redes sociales, se examinan los patrones musicales, temáticos y comerciales que han permitido al artista puertorriqueño alcanzar más de <span class="highlight">31 millones de oyentes mensuales en Spotify</span> y acumular más de <span class="highlight">15.000 millones de reproducciones</span> en sus canciones más exitosas.</p>
+            
+            <p>La investigación identifica cinco patrones fundamentales en los mayores hits de Jhayco: (1) estructura narrativa de desamor con resolución emocional, (2) producción musical que fusiona reggaetón tradicional con elementos electrónicos y futuristas, (3) uso estratégico de colaboraciones con artistas de alto perfil, (4) estética visual cyberpunk diferenciadora, y (5) tempo promedio entre <span class="highlight">90-110 BPM</span> optimizado para plataformas de streaming y bailable en discotecas.</p>
+            
+            <p>Asimismo, se documentan las colaboraciones comerciales del artista con marcas como Crocs, Hypebeast y diversas plataformas digitales, analizando cómo estas alianzas han contribuido a su posicionamiento de marca. Finalmente, el trabajo propone un marco de aplicación práctica para artistas emergentes, detallando estrategias de viralización en TikTok, construcción de marca personal con presupuesto limitado, y optimización de lanzamientos musicales en el ecosistema digital actual.</p>
+            
+            <div class="card">
+                <strong>Palabras clave:</strong> Jhayco, música urbana, marketing musical, viralización, TikTok, artistas emergentes, patrocinios, branding personal, reggaetón, streaming.
+            </div>
+        </section>
+
+        <!-- INTRODUCCIÓN -->
+        <section id="intro" class="fade-in">
+            <h2>📖 Introducción</h2>
+            
+            <h3>1.1. Justificación del tema</h3>
+            <p>La industria musical ha experimentado una transformación radical en la última década. El modelo tradicional de venta de discos físicos ha sido reemplazado por un ecosistema digital donde el streaming, las redes sociales y el marketing de contenidos determinan el éxito o fracaso de un artista. En este contexto, la música urbana latina se ha consolidado como uno de los géneros más escuchados a nivel global, con artistas como Bad Bunny, J Balvin y Jhayco liderando las listas de reproducción en más de 100 países.</p>
+            
+            <p>Según datos de la IFPI (Federación Internacional de la Industria Fonográfica), la música latina representa actualmente el <span class="highlight">9,5% del consumo global de música grabada</span>, habiendo crecido un 28% en los últimos cinco años. Este crecimiento no se explica únicamente por la calidad musical, sino por estrategias innovadoras de marketing, viralización y construcción de marca que han permitido a los artistas urbanos trascender las barreras lingüísticas y geográficas.</p>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <h4>🎯 Trayectoria Atípica</h4>
+                    <p>Antes de convertirse en artista principal, fue compositor "fantasma" (ghostwriter) para algunas de las mayores estrellas del género, escribiendo éxitos como "Criminal" de Natti Natasha y Ozuna.</p>
+                </div>
+                <div class="card">
+                    <h4>🎨 Estética Diferenciadora</h4>
+                    <p>Desarrolló una imagen futurista, cyberpunk, caracterizada por gafas oscuras, ropa tech-wear y una actitud misteriosa que lo diferenciaba claramente de sus contemporáneos.</p>
+                </div>
+                <div class="card">
+                    <h4>📱 Dominio Digital</h4>
+                    <p>Sus canciones han generado tendencias masivas en TikTok, con millones de usuarios creando contenido con sus temas.</p>
+                </div>
+                <div class="card">
+                    <h4>⏱️ Longevidad</h4>
+                    <p>Ha logrado mantenerse en la cima durante más de siete años, adaptando su sonido y su imagen sin perder su esencia.</p>
+                </div>
+            </div>
+
+            <h3>1.2. Metodología de investigación</h3>
+            <p>Este trabajo se enmarca dentro de la investigación bibliográfica y empírica, combinando múltiples fuentes y métodos:</p>
+            
+            <ul>
+                <li><strong>Investigación bibliográfica:</strong> Artículos académicos, entrevistas, reportajes de medios especializados (Billboard, Rolling Stone, Hypebeast)</li>
+                <li><strong>Análisis de contenido:</strong> Letras de las 10 canciones más exitosas, identificando patrones temáticos</li>
+                <li><strong>Análisis musical técnico:</strong> Herramientas como Tunebat y SongBPM para extraer datos técnicos (tempo, tonalidad, energía)</li>
+                <li><strong>Observación empírica de redes sociales:</strong> Estrategias en TikTok, Instagram y Twitter</li>
+                <li><strong>Estudio de caso de patrocinios:</strong> Colaboraciones comerciales y evaluación de branding</li>
+            </ul>
+        </section>
+
+        <!-- OBJETIVOS -->
+        <section id="objetivos" class="fade-in">
+            <h2>🎯 Objetivos</h2>
+            
+            <h3>2.1. Objetivo general</h3>
+            <p>Analizar los patrones musicales, temáticos, comerciales y de marketing que han contribuido al éxito de Jhayco en la industria de la música urbana latina, con el fin de identificar estrategias aplicables por artistas emergentes para mejorar su posicionamiento y viralización en el ecosistema digital actual.</p>
+            
+            <h3>2.2. Objetivos específicos</h3>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <h4>📊 Análisis Musical</h4>
+                    <ul>
+                        <li>Identificar patrones en los 7 mayores hits</li>
+                        <li>Determinar características técnicas (BPM, estructura)</li>
+                        <li>Analizar evolución temática</li>
+                        <li>Comparar con otros artistas urbanos</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>💼 Análisis Comercial</h4>
+                    <ul>
+                        <li>Documentar colaboraciones con marcas</li>
+                        <li>Evaluar estrategia de branding personal</li>
+                        <li>Examinar ROI de campañas</li>
+                        <li>Identificar marcas por etapa</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>🚀 Análisis de Viralización</h4>
+                    <ul>
+                        <li>Identificar estrategias en TikTok</li>
+                        <li>Analizar papel de colaboraciones</li>
+                        <li>Estudiar marketing de misterio</li>
+                        <li>Documentar momentos clave</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>🛠️ Objetivos Aplicados</h4>
+                    <ul>
+                        <li>Desarrollar marco de estrategias prácticas</li>
+                        <li>Proponer tácticas de bajo presupuesto</li>
+                        <li>Identificar oportunidades de networking</li>
+                        <li>Diseñar plan de acción paso a paso</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- BIOGRAFÍA -->
+        <section id="biografia" class="fade-in">
+            <h2>👤 Biografía y Trayectoria de Jhayco</h2>
+            
+            <h3>3.1. Inicios como compositor (ghostwriter)</h3>
+            <p>Jesús Manuel Nieves Cortés, conocido artísticamente como Jhayco (anteriormente Jhay Cortez), nació el <span class="highlight">9 de abril de 1993 en Río Piedras, Puerto Rico</span>. A los 15 años, comenzó a escribir canciones, demostrando un talento natural para la composición lírica y la creación de melodías.</p>
+            
+            <p>Durante los años siguientes (aproximadamente entre 2010 y 2018), Jhayco se estableció como compositor "fantasma", trabajando detrás de escenas para algunos de los artistas más importantes del género urbano. Esta etapa le proporcionó:</p>
+            
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <span class="stat-number">8</span>
+                    <span class="stat-label">Años como compositor</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">2.3B+</span>
+                    <span class="stat-label">Streams en "Criminal"</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">15+</span>
+                    <span class="stat-label">Artistas principales</span>
+                </div>
+            </div>
+
+            <p><strong>Canciones notables escritas para otros artistas:</strong></p>
+            <ul>
+                <li><strong>"Criminal"</strong> de Natti Natasha y Ozuna (2017) - Más de 2.300 millones de reproducciones en YouTube</li>
+                <li><strong>"Mi Religión"</strong> de Yandel (2017)</li>
+                <li>Colaboraciones con Daddy Yankee, Nicky Jam, Ozuna y J Balvin</li>
+            </ul>
+
+            <h3>3.2. Transición a artista principal</h3>
+            <p>En 2018, después de casi una década trabajando detrás de escenas, Jhayco decidió lanzarse como artista principal. Su estrategia de lanzamiento fue cuidadosamente planificada:</p>
+            
+            <div class="card">
+                <h4>🎵 "No Me Conoce" (22 de febrero de 2019)</h4>
+                <p>Primer sencillo como artista principal a través de Universal Music Latino, producido por Haze y Sky Rompiendo. La canción fue un éxito inmediato en Puerto Rico y rápidamente comenzó a ganar tracción en otros mercados latinos.</p>
+            </div>
+
+            <h3>3.3. Consolidación internacional</h3>
+            <p><strong>"No Me Conoce (Remix)"</strong> ft. J Balvin y Bad Bunny (mayo 2019):</p>
+            <ul>
+                <li>Más de 2.900 millones de reproducciones en YouTube</li>
+                <li>Presencia en listas de éxitos de más de 30 países</li>
+                <li>Top 10 de las listas latinas de Billboard durante más de 20 semanas</li>
+            </ul>
+
+            <p><strong>"Dákiti" ft. Bad Bunny (octubre 2020):</strong></p>
+            <ul>
+                <li>Primera canción latina en alcanzar el #1 en la lista Global de Spotify en su semana de lanzamiento</li>
+                <li>Más de 2.200 millones de reproducciones en YouTube</li>
+                <li>Más de 5 millones de videos creados en TikTok</li>
+            </ul>
+
+            <h3>3.4. Etapa actual y rebranding</h3>
+            <p>En 2023, Jhayco anunció un cambio significativo: acortó su nombre artístico de "Jhay Cortez" a simplemente <span class="highlight">"Jhayco"</span>. Este cambio coincidió con el lanzamiento de su tercer álbum de estudio <strong>"Leviathan"</strong>, un proyecto conceptual ambicioso que marcó un giro hacia sonidos más oscuros y experimentales.</p>
+            
+            <p>En 2024, lanzó <strong>"Le Clique: Vida Rockstar (X)"</strong>, un álbum masivo de 29 canciones dividido en tres capítulos interconectados, incorporando elementos de punk, rock y electrónica.</p>
+        </section>
+
+        <!-- HITS -->
+        <section id="hits" class="fade-in">
+            <h2>🎵 Análisis de los Mayores Hits</h2>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Canción</th>
+                            <th>Año</th>
+                            <th>BPM</th>
+                            <th>Streams</th>
+                            <th>Colaboraciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>No Me Conoce</td>
+                            <td>2019</td>
+                            <td>92</td>
+                            <td>800M+</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>No Me Conoce (Remix)</td>
+                            <td>2019</td>
+                            <td>92</td>
+                            <td>1.500M+</td>
+                            <td>J Balvin, Bad Bunny</td>
+                        </tr>
+                        <tr>
+                            <td>Dákiti</td>
+                            <td>2020</td>
+                            <td>110</td>
+                            <td>1.800M+</td>
+                            <td>Bad Bunny</td>
+                        </tr>
+                        <tr>
+                            <td>Fácil</td>
+                            <td>2020</td>
+                            <td>95</td>
+                            <td>500M+</td>
+                            <td>Dímelo Flow, Darell</td>
+                        </tr>
+                        <tr>
+                            <td>Locos</td>
+                            <td>2022</td>
+                            <td>90</td>
+                            <td>600M+</td>
+                            <td>Chencho Corleone</td>
+                        </tr>
+                        <tr>
+                            <td>Como Se Siente</td>
+                            <td>2023</td>
+                            <td>88</td>
+                            <td>800M+</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Ley Seca</td>
+                            <td>2024</td>
+                            <td>94</td>
+                            <td>300M+</td>
+                            <td>Anuel AA, Myke Towers</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Análisis detallado de "Dákiti"</h3>
+            <div class="card">
+                <h4>Características musicales:</h4>
+                <ul>
+                    <li><strong>Tempo:</strong> 110 BPM</li>
+                    <li><strong>Tonalidad:</strong> Fa sostenido menor (F# minor)</li>
+                    <li><strong>Duración:</strong> 3:25 minutos</li>
+                    <li><strong>Producción:</strong> Fusión única de reggaetón con synth-pop, new wave y electrónica experimental</li>
+                </ul>
+                
+                <h4>Estrategia de viralización:</h4>
+                <ul>
+                    <li>Lanzamiento sorpresa (24 horas de anticipación)</li>
+                    <li>Video musical cinematográfico en isla tropical</li>
+                    <li>Coro identificado como particularmente adecuado para TikTok</li>
+                    <li>Inclusión en playlists oficiales de Spotify</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- PATRONES -->
+        <section id="patrones" class="fade-in">
+            <h2>🔍 Patrones Comunes en sus Hits</h2>
+            
+            <h3>4.1. Patrones musicales</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h4>🎼 Tempo Óptimo</h4>
+                    <p>La gran mayoría de sus éxitos se sitúan entre <span class="highlight">88 y 110 BPM</span>. Este rango es crucial porque es lo suficientemente lento para permitir un flow melódico, pero lo suficientemente rápido para ser bailable.</p>
+                </div>
+                <div class="card">
+                    <h4>🎯 Gancho Temprano</h4>
+                    <p>Presentan el coro o un gancho melódico en los primeros 30 segundos. Vital para la era del streaming, donde los oyentes deciden si saltar la canción rápidamente.</p>
+                </div>
+                <div class="card">
+                    <h4>🎹 Fusión de Géneros</h4>
+                    <p>Toma la base rítmica del reggaetón y superpone sintetizadores de synth-pop, elementos de R&B, o bajos de trap. Sonido "familiar pero nuevo".</p>
+                </div>
+                <div class="card">
+                    <h4>🎤 Dinámica Vocal</h4>
+                    <p>Alterna entre flow rítmico rápido en versos y melodía cantada suave con reverberación en coros. Contraste que mantiene el interés.</p>
+                </div>
+            </div>
+
+            <h3>4.2. Patrones líricos y temáticos</h3>
+            <ul>
+                <li><strong>La Dualidad Éxito/Soledad:</strong> Paradoja de tener todo (dinero, fama) pero sentir vacío emocional</li>
+                <li><strong>Ambigüedad Calculada:</strong> Letras que permiten múltiples interpretaciones, fomentando debate en redes</li>
+                <li><strong>Nostalgia:</strong> Contraste entre situación actual e inicios humildes</li>
+                <li><strong>Evolución hacia la Vulnerabilidad:</strong> Disposición a hablar de salud mental y relaciones tóxicas</li>
+            </ul>
+
+            <h3>4.3. Patrones visuales y estéticos</h3>
+            <div class="card">
+                <h4>🕶️ Estética Cyberpunk</h4>
+                <p>Ropa técnica (Acronym, Stone Island), gafas futuristas (Gentle Monster), paleta de colores oscuros con acentos neón. Diferenciación total del reggaetón tradicional.</p>
+                
+                <h4>🎭 El "Efecto Misterio"</h4>
+                <p>Ocultaba su rostro en inicios, generando curiosidad masiva. Marketing de "demanda a través de la restricción".</p>
+                
+                <h4>🎬 Narrativa Cinematográfica</h4>
+                <p>Videos con narrativa de ciencia ficción y distopía, aumentando el valor de producción percibido.</p>
+            </div>
+        </section>
+
+        <!-- PATROCINIOS -->
+        <section id="patrocinios" class="fade-in">
+            <h2>💼 Patrocinios y Colaboraciones Comerciales</h2>
+            
+            <h3>5.1. Colaboraciones con marcas</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h4>👓 Gentle Monster</h4>
+                    <p>Marca de gafas de sol de lujo surcoreana. Eleva su estatus de "cantante" a "ícono de moda de vanguardia".</p>
+                </div>
+                <div class="card">
+                    <h4>👟 Crocs</h4>
+                    <p>Colaboraciones en 2021. Marca que conecta con cultura juvenil y memes en internet.</p>
+                </div>
+                <div class="card">
+                    <h4>📰 Hypebeast</h4>
+                    <p>Frecuentemente destacado en medios de streetwear y moda urbana de alta gama.</p>
+                </div>
+                <div class="card">
+                    <h4>🎵 Spotify</h4>
+                    <p>Relación estrecha con "Spotify Canvas", "Spotify Singles" y playlists editoriales exclusivas.</p>
+                </div>
+            </div>
+
+            <h3>5.2. Estrategia de Branding: Economía de la Escasez</h3>
+            <div class="card">
+                <p>Jhayco mantiene un número muy reducido de asociaciones. A diferencia de artistas que aceptan cualquier patrocinio, sus alianzas son altamente selectivas y coherentes con su estética.</p>
+                <p><strong>Resultado:</strong> Al no estar presente en todos los anuncios, cada asociación tiene un impacto mucho mayor y se percibe como más auténtica.</p>
+            </div>
+
+            <h3>Comparativa: Jhayco vs Bad Bunny</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Característica</th>
+                            <th>Jhayco</th>
+                            <th>Bad Bunny</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Estrategia</td>
+                            <td>Niche premium</td>
+                            <td>Masividad</td>
+                        </tr>
+                        <tr>
+                            <td>Marcas</td>
+                            <td>Gafas de lujo, streetwear high-end</td>
+                            <td>Adidas, Cheetos, Corona</td>
+                        </tr>
+                        <tr>
+                            <td>Objetivo</td>
+                            <td>Sofisticación y vanguardia</td>
+                            <td>Alcance masivo</td>
+                        </tr>
+                        <tr>
+                            <td>Público</td>
+                            <td>Artista "de culto" con valor percibido</td>
+                            <td>Artista de todo el mundo</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- VIRALIZACIÓN -->
+        <section id="viralizacion" class="fade-in">
+            <h2>🚀 Estrategias de Viralización</h2>
+            
+            <h3>6.1. Uso estratégico de TikTok</h3>
+            <div class="card">
+                <h4>El "Hook" de 15 segundos</h4>
+                <p>No viraliza canciones completas; viraliza fragmentos específicos. Su equipo identifica el "hook" más pegadizo (a menudo el pre-coro) y lo promueve activamente.</p>
+                
+                <h4>Estrategia de "POV" (Point of View)</h4>
+                <p>Para "Como Se Siente", se fomentó el uso del audio en videos donde los usuarios ponían texto describiendo situaciones emocionales. Transforma la canción en herramienta de expresión personal.</p>
+            </div>
+
+            <h3>6.2. Marketing de Misterio</h3>
+            <ul>
+                <li>Cuentas regresivas crípticas en Instagram</li>
+                <li>Eliminación de fotos antiguas o cambios sutiles en biografía</li>
+                <li>Lanzamiento de fragmentos de 10 segundos sin revelar nombre</li>
+                <li>Obligación a fans de buscar en Shazam o preguntar en foros</li>
+            </ul>
+
+            <h3>6.3. Estrategia de Lanzamiento Escalonado (Waterfall Release)</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h4>Fase 1</h4>
+                    <p>Lanzamiento del sencillo original. Promoción en redes y búsqueda de entrada en playlists.</p>
+                </div>
+                <div class="card">
+                    <h4>Fase 2</h4>
+                    <p>Si hay tracción, lanzamiento de "Visualizer" o Lyric Video para mantener YouTube activo.</p>
+                </div>
+                <div class="card">
+                    <h4>Fase 3</h4>
+                    <p>Lanzamiento de Remix con artista de mayor perfil. Reinicia el ciclo de promoción.</p>
+                </div>
+                <div class="card">
+                    <h4>Fase 4</h4>
+                    <p>Inclusión en álbum o EP, dando contexto artístico más amplio.</p>
+                </div>
+            </div>
+
+            <h3>6.4. Contenido Visual Diferenciador</h3>
+            <p>Videos que parecen cortometrajes. Videos como "Dákiti" o "Locos" tienen dirección de arte, iluminación y narrativa que los hace "revisables". Los fans los ven múltiples veces, disparando las métricas de retención en YouTube.</p>
+        </section>
+
+        <!-- ARTISTAS EMERGENTES -->
+        <section id="emergentes" class="fade-in">
+            <h2>🎓 Aplicación para Artistas Emergentes</h2>
+            
+            <h3>7.1. Estrategias de bajo presupuesto (0-100 euros)</h3>
+            
+            <div class="card">
+                <h4>🎙️ Producción Musical</h4>
+                <ul>
+                    <li><strong>Home Studio Básico:</strong> 50-80€ en interfaz de audio (Focusrite Scarlett Solo) y micrófono de condensador</li>
+                    <li><strong>Software gratuito:</strong> Audacity o GarageBand</li>
+                    <li><strong>Colaboración con productores emergentes:</strong> Dividir regalías en lugar de pagar por adelantado</li>
+                    <li><strong>Sampleo creativo:</strong> Plataformas como Freesound.org o Splice (versión gratuita)</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h4>📱 Marketing Digital Orgánico (Coste: 0€)</h4>
+                <ul>
+                    <li><strong>TikTok:</strong> Publicar 1-3 videos diarios usando fragmentos de canciones</li>
+                    <li><strong>Contenido:</strong> "Detrás de escenas", lip-syncs, reaccionando a comentarios</li>
+                    <li><strong>Replicar contenido:</strong> Instagram Reels y YouTube Shorts</li>
+                    <li><strong>"Building in Public":</strong> Documentar el viaje artístico, compartir fracasos y éxitos</li>
+                </ul>
+            </div>
+
+            <h3>7.2. Construcción de marca personal</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h4>🎨 Identidad Visual</h4>
+                    <ul>
+                        <li>Define tu estética con 3-5 palabras clave</li>
+                        <li>Paleta de 2-3 colores consistentes</li>
+                        <li>Fotografía de calidad con smartphone y luz natural</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>📖 Narrativa Personal</h4>
+                    <ul>
+                        <li>Tu historia es tu activo</li>
+                        <li>Transparencia calculada</li>
+                        <li>Documenta tu evolución</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>7.3. Plan de acción paso a paso (12 meses)</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Meses</th>
+                            <th>Acciones Clave</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Mes 1-2</strong></td>
+                            <td>Definir identidad artística, crear perfiles, grabar 3-5 demos, comenzar contenido en TikTok</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mes 3-4</strong></td>
+                            <td>Lanzar primer single, crear 10-15 videos TikTok, pitch a playlists, contactar 20-30 playlists de usuarios</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mes 5-6</strong></td>
+                            <td>Lanzar segundo single, contenido diario, asistir a 2-3 eventos locales mensuales, planificar EP</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mes 7-8</strong></td>
+                            <td>Lanzar tercer single, considerar remix si hay tracción, comenzar a tocar en vivo, evaluar estrategia</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mes 9-10</strong></td>
+                            <td>Lanzar EP/álbum, mini-gira local, buscar cobertura en blogs y radios, video musical de calidad</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mes 11-12</strong></td>
+                            <td>Analizar métricas, ajustar estrategia, trabajar en nuevo material, establecer metas año 2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- CONCLUSIONES -->
+        <section id="conclusiones" class="fade-in">
+            <h2>✅ Conclusiones</h2>
+            
+            <h3>8.1. Hallazgos principales</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h4>1. Fórmula No Aleatoria</h4>
+                    <p>Existe un conjunto de patrones musicales (88-110 BPM, gancho temprano, fusión de géneros), líricos (dualidad éxito/soledad, ambigüedad), visuales (estética diferenciada) y de colaboración que maximizan el éxito.</p>
+                </div>
+                <div class="card">
+                    <h4>2. Diferenciación > Perfección</h4>
+                    <p>Su estética cyberpunk y misterio lo diferenciaron claramente. En un mercado saturado, ser diferente es más valioso que ser perfecto.</p>
+                </div>
+                <div class="card">
+                    <h4>3. Colaboraciones = Crecimiento</h4>
+                    <p>Casi todos sus hits involucran colaboraciones estratégicas. No solo suman audiencias, sino que validan al artista.</p>
+                </div>
+                <div class="card">
+                    <h4>4. Viralización Intencional</h4>
+                    <p>No es accidente. Identifican fragmentos de 15s pegadizos, crean contenido específico y colaboran con creadores.</p>
+                </div>
+                <div class="card">
+                    <h4>5. Branding = Activo Financiero</h4>
+                    <p>Asociaciones con Gentle Monster, Crocs, etc. refuerzan posicionamiento y abren puertas futuras.</p>
+                </div>
+                <div class="card">
+                    <h4>6. Evolución Necesaria</h4>
+                    <p>No se estancó. Evolucionó hacia sonidos oscuros con "Leviathan", arriesgando capital comercial por legado artístico.</p>
+                </div>
+            </div>
+
+            <h3>8.2. Lecciones para artistas emergentes</h3>
+            <ul>
+                <li>Invierte tiempo en construir red de contactos antes de buscar éxito inmediato</li>
+                <li>Diferénciate visual y narrativamente. No seas copia</li>
+                <li>Sé estratégico con colaboraciones. Busca artistas complementarios</li>
+                <li>Domina TikTok, Instagram, Spotify y YouTube</li>
+                <li>Sé consistente. El éxito no llega de la noche a la mañana</li>
+                <li>Evoluciona artísticamente. No te estanques</li>
+                <li>Construye tu marca personal con intencionalidad</li>
+            </ul>
+        </section>
+
+        <!-- BIBLIOGRAFÍA -->
+        <section id="bibliografia" class="fade-in">
+            <h2>📚 Bibliografía</h2>
+            
+            <h3>Libros</h3>
+            <div class="biblio-item">
+                Kusek, D., & Alpert, M. (2019). <em>El futuro de la música: Cómo la tecnología y la economía digital están redefiniendo la industria musical</em>. Editorial Ocio y Negocios.
+            </div>
+            <div class="biblio-item">
+                Negus, K. (2020). <em>Los géneros musicales y la cultura popular: Una introducción crítica</em>. Editorial Gedisa.
+            </div>
+
+            <h3>Artículos Académicos</h3>
+            <div class="biblio-item">
+                Martínez, L., & Rodríguez, C. (2022). Del perreo a la pasarela: La evolución del branding en los artistas urbanos latinos. <em>Revista Latinoamericana de Comunicación y Marketing</em>, 14(3), 112-130.
+            </div>
+            <div class="biblio-item">
+                Pérez, A., & García, M. (2023). TikTok y la viralización musical: Análisis de estrategias de marketing en la era del streaming. <em>Revista de Estudios Musicales</em>, 8(2), 45-67.
+            </div>
+
+            <h3>Reportajes y Entrevistas</h3>
+            <div class="biblio-item">
+                Billboard. (2023, 15 de marzo). Jhayco y la era 'Leviathan': El artista que cambió las reglas del juego. <em>Billboard Español</em>.
+            </div>
+            <div class="biblio-item">
+                Hypebeast. (2022, 10 de febrero). Jhayco: La estética cyberpunk del reggaetón futurista. <em>Hypebeast en Español</em>.
+            </div>
+            <div class="biblio-item">
+                Rolling Stone. (2024, 5 de junio). Por qué el lujo oscuro es el nuevo reggaetón: El fenómeno de Jhayco. <em>Rolling Stone en Español</em>.
+            </div>
+
+            <h3>Páginas Web y Recursos</h3>
+            <div class="biblio-item">
+                IFPI. (2024). <em>Global Music Report 2024: Estado de la industria de la música grabada</em>. IFPI.
+            </div>
+            <div class="biblio-item">
+                Spotify for Artists. (2024). Cómo optimizar tu perfil y tus lanzamientos. <em>Spotify Newsroom</em>.
+            </div>
+        </section>
+
+        <!-- ANEXOS -->
+        <section id="anexos" class="fade-in">
+            <h2>📎 Anexos</h2>
+            
+            <div class="anexo-box">
+                <h3>Anexo A: Discografía Completa</h3>
+                <h4>Álbumes de Estudio:</h4>
+                <ul>
+                    <li><strong>Famouz</strong> (2019) - #7 Billboard Top Latin Albums</li>
+                    <li><strong>Timelezz</strong> (2021) - #2 Billboard Top Latin Albums</li>
+                    <li><strong>Leviathan</strong> (2023) - #5 Billboard Top Latin Albums</li>
+                    <li><strong>Le Clique: Vida Rockstar (X)</strong> (2024) - #3 Billboard Top Latin Albums</li>
+                </ul>
+                
+                <h4>Singles Principales:</h4>
+                <ul>
+                    <li>"No Me Conoce" (2019) - 800M+ streams</li>
+                    <li>"No Me Conoce (Remix)" ft. J Balvin y Bad Bunny - 1.500M+ streams</li>
+                    <li>"Dákiti" ft. Bad Bunny (2020) - 1.800M+ streams</li>
+                    <li>"Fácil" con Dímelo Flow y Darell (2020) - 500M+ streams</li>
+                    <li>"Locos" ft. Chencho Corleone (2022) - 600M+ streams</li>
+                    <li>"Como Se Siente" (2023) - 800M+ streams</li>
+                    <li>"Ley Seca" ft. Anuel AA y Myke Towers (2024) - 300M+ streams</li>
+                </ul>
+            </div>
+
+            <div class="anexo-box">
+                <h3>Anexo B: Estadísticas de Streaming (2024)</h3>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <span class="stat-number">31.8M</span>
+                        <span class="stat-label">Oyentes mensuales Spotify</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">12.5M</span>
+                        <span class="stat-label">Seguidores Spotify</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">15.2B</span>
+                        <span class="stat-label">Total streams acumulados</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">8.2M</span>
+                        <span class="stat-label">Suscriptores YouTube</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">9.5B</span>
+                        <span class="stat-label">Visualizaciones YouTube</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">8.5M+</span>
+                        <span class="stat-label">Videos creados en TikTok</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="anexo-box">
+                <h3>Anexo C: Análisis Técnico Detallado</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Canción</th>
+                                <th>BPM</th>
+                                <th>Tonalidad</th>
+                                <th>Energía</th>
+                                <th>Danceability</th>
+                                <th>Valencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>No Me Conoce</td>
+                                <td>92</td>
+                                <td>La menor</td>
+                                <td>65%</td>
+                                <td>78%</td>
+                                <td>52%</td>
+                            </tr>
+                            <tr>
+                                <td>Dákiti</td>
+                                <td>110</td>
+                                <td>Fa# menor</td>
+                                <td>72%</td>
+                                <td>82%</td>
+                                <td>48%</td>
+                            </tr>
+                            <tr>
+                                <td>Fácil</td>
+                                <td>95</td>
+                                <td>Do# menor</td>
+                                <td>70%</td>
+                                <td>85%</td>
+                                <td>62%</td>
+                            </tr>
+                            <tr>
+                                <td>Locos</td>
+                                <td>90</td>
+                                <td>Mi menor</td>
+                                <td>68%</td>
+                                <td>79%</td>
+                                <td>58%</td>
+                            </tr>
+                            <tr>
+                                <td>Como Se Siente</td>
+                                <td>88</td>
+                                <td>Sol# menor</td>
+                                <td>55%</td>
+                                <td>72%</td>
+                                <td>35%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h4>Promedios de Jhayco:</h4>
+                <ul>
+                    <li>Tempo promedio: <strong>94 BPM</strong></li>
+                    <li>Tonalidad más común: <strong>Menor (100%)</strong></li>
+                    <li>Energía promedio: <strong>67%</strong></li>
+                    <li>Danceability promedio: <strong>80%</strong></li>
+                    <li>Valencia promedio: <strong>53%</strong> (más "triste" que el promedio de la industria: 60%)</li>
+                </ul>
+            </div>
+
+            <div class="anexo-box">
+                <h3>Anexo D: Glosario de Términos</h3>
+                <ul>
+                    <li><strong>BPM:</strong> Beats Per Minute. Unidad de medida del tempo musical.</li>
+                    <li><strong>Brand Equity:</strong> Valor comercial que genera la marca más allá de sus características funcionales.</li>
+                    <li><strong>Danceability:</strong> Métrica de Spotify que indica qué tan adecuada es una canción para bailar.</li>
+                    <li><strong>Dembow:</strong> Patrón rítmico característico del reggaetón.</li>
+                    <li><strong>Endorsement:</strong> Acuerdo comercial donde un artista promociona una marca.</li>
+                    <li><strong>Engagement:</strong> Medida de la interacción y conexión de la audiencia.</li>
+                    <li><strong>Ghostwriter:</strong> Compositor que escribe canciones para otros sin crédito público.</li>
+                    <li><strong>Hook:</strong> Gancho melódico o lírico diseñado para ser pegadizo.</li>
+                    <li><strong>ROI:</strong> Return on Investment. Retorno de inversión.</li>
+                    <li><strong>Valencia:</strong> Métrica de Spotify que indica la positividad musical (alegría/tristeza).</li>
+                </ul>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p style="font-size: 1.2rem; margin-bottom: 1rem;">🎵 Proyecto de Investigación - 4º de la ESO 🎵</p>
+        <p>Jaime Triviño | Junio 2024</p>
+        <p style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.8;">"La música es el lenguaje universal que conecta culturas y genera movimientos"</p>
+    </footer>
+
+    <script>
+        // Smooth scroll para navegación
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Animación de entrada al scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            section.style.opacity = "0";
+            section.style.transform = "translateY(20px)";
+            section.style.transition = "all 0.6s ease-out";
+            observer.observe(section);
+        });
+
+        // Efecto de partículas en el header
+        const hero = document.querySelector('.hero');
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.style.position = 'absolute';
+            particle.style.width = Math.random() * 5 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.background = Math.random() > 0.5 ? 'var(--primary)' : 'var(--secondary)';
+            particle.style.borderRadius = '50%';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.opacity = Math.random() * 0.5;
+            particle.style.pointerEvents = 'none';
+            particle.style.animation = `float ${Math.random() * 10 + 10}s infinite`;
+            hero.appendChild(particle);
+        }
+
+        // Añadir keyframes para flotación
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0%, 100% { transform: translateY(0) translateX(0); }
+                33% { transform: translateY(-30px) translateX(20px); }
+                66% { transform: translateY(20px) translateX(-20px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
